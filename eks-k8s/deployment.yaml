@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+  labels:
+    type: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      type: backend
+  template:
+    metadata:
+      name: app
+      labels:
+        type: backend
+    spec:
+      containers:
+      - name: app
+        image: 978313412435.dkr.ecr.us-east-1.amazonaws.com/venkat-capstone:app-01
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "100Mi"
+          limits:
+            cpu: "2"
+            memory: "250Gi"
+      tolerations:
+        - key: name
+          value: app
+          operator: Equal
+          effect: NoSchedule
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - capstone
